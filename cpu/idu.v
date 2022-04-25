@@ -261,7 +261,7 @@ module idu (
         // ~(b_type|s_type)        //only b type and s type not write back register
     );
 
-
+/////////////////////////////imm extend//////////////////////////////
 
     imm_extend u_imm_extend(
         .instruction(instruction),
@@ -274,7 +274,7 @@ module idu (
         .u_type(u_type),
         .extended_imm(extended_imm)
     );
-
+//////////////////////////////imm extend end/////////////////////////
 
 
 endmodule

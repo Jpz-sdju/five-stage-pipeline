@@ -16,10 +16,10 @@ module imm_extend (
 );
     
     wire [`width] i_and_l_and_jalr_extend_imm = { {52{instruction[31]}} ,instruction[31:20] };
-    wire [`width] jal_extend_imm = { {44{instruction[31]}} ,instruction[19:12] ,instruction[20] ,instruction[30:21] , 1'b0};
-    wire [`width] b_extend_imm = { {52{instruction[31]}}, instruction[7], instruction[30:25], instruction[11:8], 1'b0 };   
     wire [`width] s_extend_imm = { {52{instruction[31]}}, instruction[31:25], instruction[11:7] };   
+    wire [`width] b_extend_imm = { {52{instruction[31]}}, instruction[7], instruction[30:25], instruction[11:8], 1'b0 };   
     wire [`width] lui_and_auipc_extend_imm = { {33{instruction[31]}} ,instruction[30:12], 12'b0 };//note:slli and srli appear not 
+    wire [`width] jal_extend_imm = { {44{instruction[31]}} ,instruction[19:12] ,instruction[20] ,instruction[30:21] , 1'b0};
     
     wire [`width] i_type_shift_shamt = { 58'b0, instruction[25:20]};
 
