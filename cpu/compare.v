@@ -1,7 +1,7 @@
 `include "para.v"
 module compare (
-    input [`width] a,
-    input [`width] b,
+    input [`WIDTH] a,
+    input [`WIDTH] b,
     output equal,
     output less_than,
     output u_less_than

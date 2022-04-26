@@ -1,16 +1,16 @@
 `include "para.v"
 module cpu (input sys_clk,
             input sys_rst,
-            output [`width]vmem_data,
+            output [`WIDTH]vmem_data,
             output ebreak
             );
     
     
     wire pc_sel;
-    wire [`width] pc_plus_4;
-    wire [`width] now_pc;
+    wire [`WIDTH] pc_plus_4;
+    wire [`WIDTH] now_pc;
     wire [31:0] instruction;
-    wire [`width] alu_res;
+    wire [`WIDTH] alu_res;
     
     ifu u_IFU(
     .sys_clk   (sys_clk),
@@ -24,17 +24,17 @@ module cpu (input sys_clk,
     
 
 
-    wire [`width] final_a;
-    wire [`width] final_b;
+    wire [`WIDTH] final_a;
+    wire [`WIDTH] final_b;
     wire is_write_dmem;
     wire [1:0] wb_select;
     wire [7:0] write_width;
-    wire [`width] write_back_data;
+    wire [`WIDTH] write_back_data;
     wire sub;
     wire slt_and_spin_off_signed;
     wire slt_and_spin_off_unsigned;
     wire [2:0] alu_op;
-    wire [`width] rs2;
+    wire [`WIDTH] rs2;
     idu u_IDU(
     .sys_clk                   (sys_clk),
     .sys_rst                    (sys_rst),

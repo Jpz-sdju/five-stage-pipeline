@@ -1,20 +1,20 @@
 `include "para.v"
 module exu (
-    input [`width] a,
-    input [`width] b,
-    output [`width] res,
+    input [`WIDTH] a,
+    input [`WIDTH] b,
+    output [`WIDTH] res,
     input [2:0] alu_op,
     input sub,
     input slt_and_spin_off_signed,
     input slt_and_spin_off_unsigned
 );
-    wire [`width] tricked_b;
-    wire [`width] alu_res;
+    wire [`WIDTH] tricked_b;
+    wire [`WIDTH] alu_res;
     wire contrary_signed =a[63] ^ b[63];
     wire slt_contrary_signed = contrary_signed&&slt_and_spin_off_signed;
     wire cout;
 
-    wire [`width]one_bit_res;
+    wire [`WIDTH]one_bit_res;
     alu u_alu(
         a,
         tricked_b,

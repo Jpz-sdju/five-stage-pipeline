@@ -3,13 +3,13 @@ module mem_wb (
     input sys_clk,
     input sys_rst,
     input [1:0] wb_select,
-               input [`width] pc_plus_4,
-               input [`width] alu_res,
-               input [`width] rs2,
+               input [`WIDTH] pc_plus_4,
+               input [`WIDTH] alu_res,
+               input [`WIDTH] rs2,
                input [7:0] write_width,
                input write_enable,
-               output [`width] write_back_data,
-               output [`width] vmem_data
+               output [`WIDTH] write_back_data,
+               output [`WIDTH] vmem_data
                );
     
     reg [7:0] dmem[0:127];
@@ -26,7 +26,7 @@ module mem_wb (
         else cnter<=cnter+1;
     end
     assign vmem_data = {vmem[7],vmem[6],vmem[5],vmem[4],vmem[3],vmem[2],vmem[1],vmem[0]};
-    wire [`width] dmem_data = {dmem[alu_res+7],dmem[alu_res+6],dmem[alu_res+5],dmem[alu_res+4],dmem[alu_res+3],dmem[alu_res+2],dmem[alu_res+1],dmem[alu_res]};
+    wire [`WIDTH] dmem_data = {dmem[alu_res+7],dmem[alu_res+6],dmem[alu_res+5],dmem[alu_res+4],dmem[alu_res+3],dmem[alu_res+2],dmem[alu_res+1],dmem[alu_res]};
     
     always @(posedge sys_clk) begin
         if (write_enable ) begin

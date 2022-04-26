@@ -1,9 +1,9 @@
 `include "para.v"
 module alu (
-    input [`width] a,
-    input [`width] b,
+    input [`WIDTH] a,
+    input [`WIDTH] b,
     input [2:0] alu_op,
-    output reg [`width] c,
+    output reg [`WIDTH] c,
     input sub_as_carry,
     output reg cout
 );

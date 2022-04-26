@@ -1,4 +1,5 @@
-`define width 63:0
+`define WIDTH 63:0
+`define INS_WIDTH 31:0
 `define r_type_opcode 7'b0110011
 `define i_type_opcode 7'b0010011
 `define l_type_opcode 7'b0000011

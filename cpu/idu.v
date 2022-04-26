@@ -3,18 +3,18 @@ module idu (
     input sys_clk,
     input sys_rst,
     input [31:0] instruction,
-    input [`width] now_pc,        //signal to mux that across regfile and alu's b port
+    input [`WIDTH] now_pc,        //signal to mux that across regfile and alu's b port
 
-    input [`width] pc_plus_4,
-    output [`width] final_a,      //oprend a to alu
-    output [`width] final_b,      //oprend b to alu
+    input [`WIDTH] pc_plus_4,
+    input [`WIDTH] write_back_data,
+    output [`WIDTH] final_a,      //oprend a to alu
+    output [`WIDTH] final_b,      //oprend b to alu
     //signals to MEM_EB
     output is_write_dmem,
     output reg [1:0] wb_select,
     output reg [7:0] write_width,
-    input [`width] write_back_data,
 
-    output [`width] dmem_write_data,
+    output [`WIDTH] dmem_write_data,
     output sub,
     output slt_and_spin_off_signed,
     output slt_and_spin_off_unsigned,
@@ -41,15 +41,15 @@ module idu (
     wire is_rs1_pc;
     wire is_rs2_imm;
     //mux data 
-    wire [`width] register_data1;
-    wire [`width] register_data2;
-    wire [`width] extended_imm;
+    wire [`WIDTH] register_data1;
+    wire [`WIDTH] register_data2;
+    wire [`WIDTH] extended_imm;
 
     assign dmem_write_data = register_data2;
     //ebreak signal
     assign ebreak = ( opcode[6]& opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);
 
-    // wire [`width] write_back_data;
+    // wire [`WIDTH] write_back_data;
 
     wire r_type = (~opcode[6]& opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);     //0110011
     wire i_type = (~opcode[6]&~opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);     //0010011
@@ -153,7 +153,7 @@ module idu (
     );
 //---------------------------end------------------------------------------------
 
-    always @(*) begin //writdata width options ,four options
+    always @(*) begin //writdata WIDTH options ,four options
         if (s_type) begin
             case (funct3)
                 `sb:write_width=8'd1;
