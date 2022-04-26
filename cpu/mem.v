@@ -1,5 +1,5 @@
 `include "para.v"
-module mem_wb (
+module mem (
     input sys_clk,
     input sys_rst,
     input [1:0] wb_select,

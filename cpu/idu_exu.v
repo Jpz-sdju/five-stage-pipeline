@@ -18,15 +18,16 @@ module idu_exu (
     ////////////to exu/////////////////
     output reg [`WIDTH] ex_final_a,      
     output reg [`WIDTH] ex_final_b,      
+    output reg [2:0]ex_alu_op,
+    output reg ex_sub,
+    output reg ex_slt_and_spin_off_signed,
+    output reg ex_slt_and_spin_off_unsigned,
+    ///////////end od to exu//////////////
     //signareg ls to MEM_EB
     output reg ex_is_write_dmem,
     output reg [1:0] ex_wb_select,
     output reg [7:0] ex_write_width,
     output reg [`WIDTH] ex_dmem_write_data,
-    output reg ex_sub,
-    output reg ex_slt_and_spin_off_signed,
-    output reg ex_slt_and_spin_off_unsigned,
-    output reg [2:0]ex_alu_op,
     output reg ex_pc_sel         //control harazd!
 
 );
