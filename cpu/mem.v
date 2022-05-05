@@ -3,13 +3,13 @@ module mem (
     input sys_clk,
     input sys_rst,
     input [1:0] wb_select,
-               input [`WIDTH] pc_plus_4,
-               input [`WIDTH] alu_res,
-               input [`WIDTH] rs2,
+               input [`width] pc_plus_4,
+               input [`width] alu_res,
+               input [`width] rs2,
                input [7:0] write_width,
                input write_enable,
-               output [`WIDTH] write_back_data,
-               output [`WIDTH] vmem_data
+               output [`width] write_back_data,
+               output [`width] vmem_data
                );
     
     reg [7:0] dmem[0:127];
@@ -26,7 +26,7 @@ module mem (
         else cnter<=cnter+1;
     end
     assign vmem_data = {vmem[7],vmem[6],vmem[5],vmem[4],vmem[3],vmem[2],vmem[1],vmem[0]};
-    wire [`WIDTH] dmem_data = {dmem[alu_res+7],dmem[alu_res+6],dmem[alu_res+5],dmem[alu_res+4],dmem[alu_res+3],dmem[alu_res+2],dmem[alu_res+1],dmem[alu_res]};
+    wire [`width] dmem_data = {dmem[alu_res+7],dmem[alu_res+6],dmem[alu_res+5],dmem[alu_res+4],dmem[alu_res+3],dmem[alu_res+2],dmem[alu_res+1],dmem[alu_res]};
     
     always @(posedge sys_clk) begin
         if (write_enable ) begin
@@ -59,17 +59,6 @@ module mem (
     
     
     );
-    // import "DPI-C" function void pmem_read(
-    //   input longint raddr, output longint rdata);
-    // import "DPI-C" function void pmem_write(
-    //   input longint waddr, input longint wdata, input byte wmask);
-    // always @(*) begin
-    //     if (write_enable)
-    //         pmem_write(alu_res, rs2, write_width);
-    // end
-    // always @(*) begin
-    //       pmem_read(alu_res, dmem_data);
-    //       dmem_data = dmem_data >>(alu_res%8)*8;
-    // end
+
     
 endmodule

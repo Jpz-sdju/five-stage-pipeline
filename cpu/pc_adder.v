@@ -2,8 +2,8 @@
 module pc_adder (
     input sys_clk,
     input sys_rst,
-    input [`WIDTH] now_pc,
-    output reg [`WIDTH] pc_plus_4
+    input [`width] now_pc,
+    output reg [`width] pc_plus_4
 );
     always @(*) begin
         if (~sys_rst) begin
