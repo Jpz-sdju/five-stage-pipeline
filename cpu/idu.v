@@ -1,25 +1,25 @@
 `include "para.v"
 module idu (
     input sys_clk,
-    input sys_rst,
     input [31:0] instruction,
-    input [`WIDTH] now_pc,        //signal to mux that across regfile and alu's b port
+    input [`width] now_pc,        //signal to mux that across regfile and alu's b port
 
-    input [`WIDTH] pc_plus_4,
-    input [`WIDTH] write_back_data,
-    output [`WIDTH] final_a,      //oprend a to alu
-    output [`WIDTH] final_b,      //oprend b to alu
+    input [`width] pc_plus_4,
+    output [`width] final_a,      //oprend a to alu
+    output [`width] final_b,      //oprend b to alu
     //signals to MEM_EB
     output is_write_dmem,
     output reg [1:0] wb_select,
     output reg [7:0] write_width,
+    output [`width] write_back_data,
 
-    output [`WIDTH] dmem_write_data,
+    output [`width] dmem_write_data,
     output sub,
     output slt_and_spin_off_signed,
     output slt_and_spin_off_unsigned,
-    output reg [2:0]alu_op,
+    output reg [3:0]alu_op,
     output reg pc_sel,              //pc_sel to if
+    output word_op,             //signal to exu to judge caculate is word oprate
     output ebreak
 );
 
@@ -38,26 +38,31 @@ module idu (
 
     wire [4:0] rs1 = instruction[19:15];
     wire [4:0] rs2 = instruction[24:20];
-    wire is_rs1_pc;
+    reg is_rs1_pc;
     wire is_rs2_imm;
     //mux data 
-    wire [`WIDTH] register_data1;
-    wire [`WIDTH] register_data2;
-    wire [`WIDTH] extended_imm;
+    wire [`width] register_data1;
+    wire [`width] register_data2;
+    wire [`width] extended_imm;
 
     assign dmem_write_data = register_data2;
     //ebreak signal
     assign ebreak = ( opcode[6]& opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);
 
-    // wire [`WIDTH] write_back_data;
-
-    wire r_type = (~opcode[6]& opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);     //0110011
-    wire i_type = (~opcode[6]&~opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);     //0010011
+    // wire [`width] write_back_data;
+    wire rw_type= opcode == `rw_type_opcode;
+    wire iw_type= opcode == `iw_type_opcode;
+    wire r_type = (~opcode[6]& opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]) ||(rw_type);     //0110011
+    wire i_type = (~opcode[6]&~opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]) ||(iw_type);     //0010011
     wire l_type = (~opcode[6]&~opcode[5]&~opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);
     wire j_type = ( opcode[6]& opcode[5]&~opcode[4]& opcode[3]& opcode[2]& opcode[1]& opcode[0]) | ( opcode[6]& opcode[5]&~opcode[4]&~opcode[3]& opcode[2]& opcode[1]& opcode[0]); //jal and jalr
     wire b_type = ( opcode[6]& opcode[5]&~opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);     //1100011
     wire s_type = (~opcode[6]& opcode[5]&~opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);     //0100011
     wire u_type = (~opcode[6]& opcode[5]& opcode[4]&~opcode[3]& opcode[2]& opcode[1]& opcode[0]) | (~opcode[6]&~opcode[5]& opcode[4]&~opcode[3]& opcode[2]& opcode[1]& opcode[0]); //
+
+    /////////////////word operate////////////
+    assign word_op = rw_type||iw_type;
+    /////////////////word operate////////////
 
     assign is_write_dmem = s_type;      //only in s type,dmem should be wrote.
 
@@ -68,22 +73,19 @@ module idu (
     assign slt_and_spin_off_unsigned = (r_type || i_type)&&(funct3 == 3'b011);
 
 //*********************final a and final b choose******************
-
-    assign is_rs1_pc = (j_type&&opcode==`jal_type_opcode)||(opcode==`auipc_opcode)||(b_type);
-
-    // always @(*) begin           //final a choose
-    //     if(j_type)begin
-    //         if(opcode == `jal_type_opcode )
-    //             is_rs1_pc = 1'b1;
-    //         else is_rs1_pc=1'b0;
-    //     end 
-    //     else if(opcode == `auipc_opcode)
-    //         is_rs1_pc =1'b1;
-    //     else if (b_type) begin
-    //         is_rs1_pc =1'b1;
-    //     end
-    //     else is_rs1_pc =1'b0;
-    // end
+    always @(*) begin           //final a choose
+        if(j_type)begin
+            if(opcode == `jal_type_opcode )
+                is_rs1_pc = 1'b1;
+            else is_rs1_pc=1'b0;
+        end 
+        else if(opcode == `auipc_opcode)
+            is_rs1_pc =1'b1;
+        else if (b_type) begin
+            is_rs1_pc =1'b1;
+        end
+        else is_rs1_pc =1'b0;
+    end
     assign is_rs2_imm = ~r_type;    //final b choose,only when ins is r type, rs2 is register.
     MuxKey #(2,1,64) rs1_or_pc(
         final_a,
@@ -111,16 +113,14 @@ module idu (
     wire u_less_than;
 
     //signals for B type,is used to generate pc_sel signal
-    wire beq = b_type &&(funct3 == `beq);
-    wire bne = b_type &&(funct3 == `bne);
-    wire blt = b_type &&(funct3 == `blt);
-    wire bge = b_type &&(funct3 == `bge);
-    wire bltu = b_type &&(funct3 == `bltu);
-    wire bgeu = b_type &&(funct3 == `bgeu);
+    wire beq = b_type &&(funct3 == beq);
+    wire bne = b_type &&(funct3 == bne);
+    wire blt = b_type &&(funct3 == blt);
+    wire bge = b_type &&(funct3 == bge);
+    wire bltu = b_type &&(funct3 == bltu);
+    wire bgeu = b_type &&(funct3 == bgeu);
     always @(*) begin        //pc sel logic
-        if (~sys_rst) 
-            pc_sel=0;
-        else if (j_type) begin
+        if (j_type) begin
             pc_sel=1'b1;
         end 
         else if (beq && equal) begin
@@ -153,13 +153,13 @@ module idu (
     );
 //---------------------------end------------------------------------------------
 
-    always @(*) begin //writdata WIDTH options ,four options
+    always @(*) begin //writdata `width options ,four options
         if (s_type) begin
             case (funct3)
-                `sb:write_width=8'd1;
-                `sh:write_width=8'd3;
-                `sw:write_width=8'd15; 
-                `sd:write_width=8'd127;
+                `sb:write_width=8'b00000001;
+                `sh:write_width=8'b00000011;
+                `sw:write_width=8'b00001111; 
+                `sd:write_width=8'b11111111;
                 default: write_width=8'd0;
             endcase
         end
@@ -184,42 +184,58 @@ module idu (
             case (funct3)
                 `lb: 
                     write_data = {{57{write_back_data[7]}},write_back_data[6:0]};
+                `lh:
+                    write_data = {{49{write_back_data[15]}} ,write_back_data[14:0]};
+                `lhu:
+                    write_data = {48'b0,write_back_data[15:0]};
                 `lw: 
                     write_data = {{33{write_back_data[31]}},write_back_data[30:0]};
+                `lbu:
+                    write_data = {56'b0,write_back_data[7:0]};
                 `ld:
                     write_data=write_back_data;
-                `lbu:
-                    write_data={58'b0,write_back_data[7:0]};
                 default: write_data =write_back_data;
             endcase        
+        end else if (word_op) begin
+            write_data = {{33{write_back_data[31]}},write_back_data[30:0]};
         end else
             write_data =write_back_data;
     end
-    //************************************************************
+    //*********************************************
 
     always @(*) begin
         if (r_type) begin
             case (funct3)
-                `add_or_sub:
-                    alu_op=`alu_add;
-                `sll:
-                    alu_op = `alu_sl;    //sll
+                `add_or_sub_or_mul:
+                begin
+                    if ((r_type||rw_type)&&funct7==7'b1) begin            //when f7 is 7'b1,operator is mul!fixed bug
+                        alu_op = `alu_mul;
+                    end else
+                        alu_op=`alu_add;
+                end
+                `sllx:
+                    alu_op = `alu_sl;    //sll and sllw
                 `slt:
                     alu_op = `alu_add;        //this
                 `sltu:
                     alu_op = `alu_add;        //this
-                `xor:
-                    alu_op = `alu_xor;
-                `srl_and_sra:
+                `xor_or_div:
+                    if (rw_type) begin
+                        alu_op = `alu_div;
+                    end else alu_op = `alu_xor;
+                `srlx_and_srax:
                     if (funct7 == 7'b0) 
-                        alu_op = `alu_sr; //srl
+                        alu_op = `alu_sr; //srl and srlw
                     else
                         alu_op = `alu_sra;        //sra
-                `or:
-                    alu_op = `alu_or;
+                `or_or_rem:
+                    if (rw_type) begin
+                        alu_op = `alu_rem;
+                    end else alu_op = `alu_or;
                 `and:
                     alu_op = `alu_and;
-            endcase
+                
+            endcase 
         end 
         else if (i_type) begin
             case (funct3)
@@ -235,10 +251,10 @@ module idu (
                     alu_op = `alu_or;
                 `andi:
                     alu_op = `alu_and;
-                `slli:
+                `sllx:
                     alu_op = `alu_sl;     //slli
-                `srli_and_srai:
-                    if (funct7[6:1] == 6'b0) 
+                `srlx_and_srax:
+                    if (funct7 == 7'b0) 
                         alu_op = `alu_sr; //srli
                     else
                         alu_op = `alu_sra;        //srai
@@ -248,9 +264,8 @@ module idu (
             alu_op = `alu_add;            //use comparator to compare sizes!
     end
 
-    regfile #(5,64)u_regfile(
+    regfile #(32,64)u_regfile(
         sys_clk,
-        sys_rst,
         rs1,
         rs2,
         rd,
@@ -261,7 +276,7 @@ module idu (
         // ~(b_type|s_type)        //only b type and s type not write back register
     );
 
-/////////////////////////////imm extend//////////////////////////////
+
 
     imm_extend u_imm_extend(
         .instruction(instruction),
@@ -274,7 +289,7 @@ module idu (
         .u_type(u_type),
         .extended_imm(extended_imm)
     );
-//////////////////////////////imm extend end/////////////////////////
+
 
 
 endmodule

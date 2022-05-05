@@ -1,17 +1,17 @@
 `include "para.v"
 module cpu (input sys_clk,
             input sys_rst,
-            output [`WIDTH]vmem_data,
+            output [`width]now_pc,
             output ebreak
             );
     
     
     wire pc_sel;
-    wire [`WIDTH] pc_plus_4;
-    wire [`WIDTH] now_pc;
+    wire [`width] pc_plus_4;
+    // wire [`width] now_pc;
     wire [31:0] instruction;
-    wire [`WIDTH] alu_res;
     
+    wire [`width] alu_res;
     ifu u_IFU(
     .sys_clk   (sys_clk),
     .sys_rst   (sys_rst),
@@ -24,20 +24,22 @@ module cpu (input sys_clk,
     
 
 
-    wire [`WIDTH] final_a;
-    wire [`WIDTH] final_b;
+    wire [`width] final_a;
+    wire [`width] final_b;
     wire is_write_dmem;
     wire [1:0] wb_select;
     wire [7:0] write_width;
-    wire [`WIDTH] write_back_data;
+    wire [`width] write_back_data;
     wire sub;
     wire slt_and_spin_off_signed;
     wire slt_and_spin_off_unsigned;
-    wire [2:0] alu_op;
-    wire [`WIDTH] rs2;
+    wire [3:0] alu_op;
+    wire [`width] rs2;
+
+    wire word_op;
+
     idu u_IDU(
     .sys_clk                   (sys_clk),
-    .sys_rst                    (sys_rst),
     .now_pc                    (now_pc),
     .pc_plus_4                 (pc_plus_4),
     .instruction               (instruction),
@@ -53,9 +55,11 @@ module cpu (input sys_clk,
     .slt_and_spin_off_unsigned (slt_and_spin_off_unsigned),
     .alu_op                    (alu_op),
     .pc_sel                    (pc_sel),
+    .word_op                    (word_op),
     .ebreak                    (ebreak)
     );
     
+
     exu u_EXU(
     .a                         (final_a),
     .b                         (final_b),
@@ -63,30 +67,28 @@ module cpu (input sys_clk,
     .alu_op                    (alu_op),
     .sub                       (sub),
     .slt_and_spin_off_signed   (slt_and_spin_off_signed),
-    .slt_and_spin_off_unsigned (slt_and_spin_off_unsigned)
+    .slt_and_spin_off_unsigned (slt_and_spin_off_unsigned),
+    .word_op                    (word_op)
     );
-    // MEM_WB u_MEM_WB(
-    // .sys_rst         (sys_rst),
-    // .alu_res         (alu_res),
-    // .write_width     (write_width),
-    // .pc_plus_4       (pc_plus_4),
-    // .write_enable    (is_write_dmem),
-    // .wb_select       (wb_select),
-    // .rs2             (rs2),
-    // .write_back_data (write_back_data),
-    // .vmem_data       (vmem_data)
-    // );
+    MEM_WB u_MEM_WB(
+    .sys_rst         (sys_rst),
+    .alu_res         (alu_res),
+    .write_width     (write_width),
+    .pc_plus_4       (pc_plus_4),
+    .write_enable    (is_write_dmem),
+    .wb_select       (wb_select),
+    .rs2             (rs2),
+    .write_back_data (write_back_data),
+    .vmem_data       (vmem_data)
+    );
     
     mem_wb u_mem_wb(
-     .sys_clk(sys_clk),
-     .sys_rst(sys_rst),
      .wb_select(wb_select),
      .pc_plus_4(pc_plus_4),
      .alu_res(alu_res),
      .rs2(rs2),
      .write_width(write_width),
      .write_enable(is_write_dmem),
-     .write_back_data(write_back_data),
-     .vmem_data(vmem_data)
+     .write_back_data(write_back_data)
     );
 endmodule
