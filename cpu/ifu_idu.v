@@ -1,12 +1,12 @@
 `include "para.v"
 module ifu_idu (
     input sys_clk,
-    input [`WIDTH] if_now_pc,
-    input [`WIDTH] if_pc_plus_4,
-    input [`INS_WIDTH] if_instruction,
-    output reg [`WIDTH] id_now_pc,
-    output reg [`WIDTH] id_pc_plus_4,
-    output reg [`INS_WIDTH] id_instruction
+    input [`width] if_now_pc,
+    input [`width] if_pc_plus_4,
+    input [`width] if_instruction,
+    output reg [`width] id_now_pc,
+    output reg [`width] id_pc_plus_4,
+    output reg [`width] id_instruction
 );
     
     always @(posedge sys_clk) begin

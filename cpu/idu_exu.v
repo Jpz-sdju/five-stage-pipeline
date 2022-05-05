@@ -3,21 +3,21 @@ module idu_exu (
     input sys_clk,
     input sys_rst,
     
-    input [`WIDTH] id_final_a,      
-    input [`WIDTH] id_final_b,      
+    input [`width] id_final_a,      
+    input [`width] id_final_b,      
     //signals to MEM_EB
     input id_is_write_dmem,
     input [1:0] id_wb_select,
     input [7:0] id_write_width,
-    input [`WIDTH] id_dmem_write_data,
+    input [`width] id_dmem_write_data,
     input id_sub,
     input id_slt_and_spin_off_signed,
     input id_slt_and_spin_off_unsigned,
     input [2:0]id_alu_op,
     input id_pc_sel,         //control harazd!
     ////////////to exu/////////////////
-    output reg [`WIDTH] ex_final_a,      
-    output reg [`WIDTH] ex_final_b,      
+    output reg [`width] ex_final_a,      
+    output reg [`width] ex_final_b,      
     output reg [2:0]ex_alu_op,
     output reg ex_sub,
     output reg ex_slt_and_spin_off_signed,
@@ -27,7 +27,7 @@ module idu_exu (
     output reg ex_is_write_dmem,
     output reg [1:0] ex_wb_select,
     output reg [7:0] ex_write_width,
-    output reg [`WIDTH] ex_dmem_write_data,
+    output reg [`width] ex_dmem_write_data,
     output reg ex_pc_sel         //control harazd!
 
 );
