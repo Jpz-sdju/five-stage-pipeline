@@ -2,6 +2,7 @@
 module id_ex (
     input sys_clk,
     input sys_rst,
+    input valid,
     
     input [`width] id_final_a,      
     input [`width] id_final_b,      

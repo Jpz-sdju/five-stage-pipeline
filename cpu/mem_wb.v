@@ -2,6 +2,8 @@
 module mem_wb (
     input sys_clk,
     input sys_rst,
+    input valid,
+    
     input [4:0]mem_write_back_addr,
     input [`width] mem_write_back_data,
     output reg [4:0] wb_write_back_addr,

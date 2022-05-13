@@ -1,6 +1,9 @@
 `include "para.v"
 module ex_mem (
     input sys_clk,
+    input sys_rst,
+    input valid,
+
     input ex_is_write_dmem,
     input [1:0]ex_wb_select,
     input [7:0] ex_write_width,
