@@ -2,12 +2,12 @@
 module exu (
     input [`width] a,
     input [`width] b,
-    output [`width] res,
     input [3:0] alu_op,
     input sub,
     input slt_and_spin_off_signed,
     input slt_and_spin_off_unsigned,
-    input word_op
+    input word_op,
+    output [`width] res
 );
     wire [`width] tricked_b;
     wire [`width] alu_res;

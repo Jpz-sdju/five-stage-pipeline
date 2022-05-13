@@ -107,7 +107,7 @@ module cpu (input sys_clk,
         .id_slt_and_spin_off_signed   (slt_and_spin_off_signed   ),
         .id_slt_and_spin_off_unsigned (slt_and_spin_off_unsigned ),
         .id_alu_op                    (alu_op                    ),
-        .id_word_op                   (id_word_op                   ),
+        .id_word_op                   (word_op                   ),
         .ex_final_a                   (ex_final_a                   ),
         .ex_final_b                   (ex_final_b                   ),
         .ex_alu_op                    (ex_alu_op                    ),
@@ -126,14 +126,18 @@ module cpu (input sys_clk,
     exu u_EXU(
     .a                         (ex_final_a),
     .b                         (ex_final_b),
-    .res                       (ex_alu_res),
     .alu_op                    (ex_alu_op),
     .sub                       (ex_sub),
     .slt_and_spin_off_signed   (ex_slt_and_spin_off_signed),
     .slt_and_spin_off_unsigned (ex_slt_and_spin_off_unsigned),
-    .word_op                    (word_op)
+    .word_op                   (ex_word_op),
+    .res                       (alu_res)
     );
 
+    wire mem_is_write_dmem;
+    wire [1:0]mem_wb_select;
+    wire [7:0] mem_write_width;
+    wire [`width] mem_dmem_write_data;
     ex_mem u_ex_mem(
     	.sys_clk             (sys_clk             ),
         .sys_rst             (sys_rst             ),
