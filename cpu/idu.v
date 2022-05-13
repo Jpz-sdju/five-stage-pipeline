@@ -5,6 +5,8 @@ module idu (
     input [`width] now_pc,        //signal to mux that across regfile and alu's b port
 
     input [`width] pc_plus_4,
+    input [4:0] wb_rd,
+    output [4:0] to_pipeline_rd,
     output [`width] final_a,      //oprend a to alu
     output [`width] final_b,      //oprend b to alu
     //signals to MEM_EB
@@ -34,7 +36,9 @@ module idu (
     //     rd <= instruction [11:7];
     // end
 
-    wire [4:0] rd = instruction[11:7];
+    ///this rd to id_ex register//
+    assign to_pipeline_rd = instruction[11:7];
+    /////////////////////////////////
 
     wire [4:0] rs1 = instruction[19:15];
     wire [4:0] rs2 = instruction[24:20];
@@ -268,7 +272,7 @@ module idu (
         sys_clk,
         rs1,
         rs2,
-        rd,
+        wb_rd,
         write_data,
         register_data1,
         register_data2,
