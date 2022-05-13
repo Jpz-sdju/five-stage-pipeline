@@ -70,25 +70,17 @@ module cpu (input sys_clk,
     .slt_and_spin_off_unsigned (slt_and_spin_off_unsigned),
     .word_op                    (word_op)
     );
-    MEM_WB u_MEM_WB(
-    .sys_rst         (sys_rst),
-    .alu_res         (alu_res),
-    .write_width     (write_width),
-    .pc_plus_4       (pc_plus_4),
-    .write_enable    (is_write_dmem),
-    .wb_select       (wb_select),
-    .rs2             (rs2),
-    .write_back_data (write_back_data),
-    .vmem_data       (vmem_data)
+    mem u_mem(
+    	.sys_clk         (sys_clk         ),
+        .sys_rst         (sys_rst         ),
+        .wb_select       (wb_select       ),
+        .pc_plus_4       (pc_plus_4       ),
+        .alu_res         (alu_res         ),
+        .rs2             (rs2             ),
+        .write_width     (write_width     ),
+        .write_enable    (write_enable    ),
+        .write_back_data (write_back_data ),
+        .vmem_data       (vmem_data       )
     );
     
-    mem_wb u_mem_wb(
-     .wb_select(wb_select),
-     .pc_plus_4(pc_plus_4),
-     .alu_res(alu_res),
-     .rs2(rs2),
-     .write_width(write_width),
-     .write_enable(is_write_dmem),
-     .write_back_data(write_back_data)
-    );
 endmodule
