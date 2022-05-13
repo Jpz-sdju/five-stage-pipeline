@@ -107,6 +107,7 @@ module cpu (input sys_clk,
         .id_slt_and_spin_off_signed   (slt_and_spin_off_signed   ),
         .id_slt_and_spin_off_unsigned (slt_and_spin_off_unsigned ),
         .id_alu_op                    (alu_op                    ),
+        .id_word_op                   (id_word_op                   ),
         .ex_final_a                   (ex_final_a                   ),
         .ex_final_b                   (ex_final_b                   ),
         .ex_alu_op                    (ex_alu_op                    ),
@@ -116,19 +117,36 @@ module cpu (input sys_clk,
         .ex_is_write_dmem             (ex_is_write_dmem             ),
         .ex_wb_select                 (ex_wb_select                 ),
         .ex_write_width               (ex_write_width               ),
-        .ex_dmem_write_data           (ex_dmem_write_data           )
+        .ex_dmem_write_data           (ex_dmem_write_data           ),
+        .ex_word_op                   (ex_word_op                   )
     );
+
     
     
     exu u_EXU(
-    .a                         (final_a),
-    .b                         (final_b),
-    .res                       (alu_res),
-    .alu_op                    (alu_op),
-    .sub                       (sub),
-    .slt_and_spin_off_signed   (slt_and_spin_off_signed),
-    .slt_and_spin_off_unsigned (slt_and_spin_off_unsigned),
+    .a                         (ex_final_a),
+    .b                         (ex_final_b),
+    .res                       (ex_alu_res),
+    .alu_op                    (ex_alu_op),
+    .sub                       (ex_sub),
+    .slt_and_spin_off_signed   (ex_slt_and_spin_off_signed),
+    .slt_and_spin_off_unsigned (ex_slt_and_spin_off_unsigned),
     .word_op                    (word_op)
+    );
+
+    ex_mem u_ex_mem(
+    	.sys_clk             (sys_clk             ),
+        .sys_rst             (sys_rst             ),
+        .valid               (valid               ),
+        .ex_is_write_dmem    (ex_is_write_dmem    ),
+        .ex_wb_select        (ex_wb_select        ),
+        .ex_write_width      (ex_write_width      ),
+        .ex_dmem_write_data  (ex_dmem_write_data  ),
+        .ex_pc_sel           (ex_pc_sel           ),
+        .mem_is_write_dmem   (mem_is_write_dmem   ),
+        .mem_wb_select       (mem_wb_select       ),
+        .mem_write_width     (mem_write_width     ),
+        .mem_dmem_write_data (mem_dmem_write_data )
     );
     
     mem u_mem(
