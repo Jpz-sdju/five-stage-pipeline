@@ -1,5 +1,5 @@
 `include "para.v"
-module idu_exu (
+module id_ex (
     input sys_clk,
     input sys_rst,
     

@@ -1,5 +1,5 @@
 `include "para.v"
-module ifu_idu (
+module if_id (
     input sys_clk,
     input [`width] if_now_pc,
     input [`width] if_pc_plus_4,

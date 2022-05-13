@@ -54,10 +54,6 @@ module mem (
     2'b10, pc_plus_4,
     2'b11, alu_res  //not used
     }
-    
-    
-    
-    
     );
 
     
