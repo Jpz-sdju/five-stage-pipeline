@@ -24,13 +24,13 @@ module id_ex (
     output reg ex_sub,
     output reg ex_slt_and_spin_off_signed,
     output reg ex_slt_and_spin_off_unsigned,
+    output reg ex_word_op,
     ///////////end od to exu//////////////
     //signareg ls to MEM_EB
     output reg ex_is_write_dmem,
     output reg [1:0] ex_wb_select,
     output reg [7:0] ex_write_width,
     output reg [`width] ex_dmem_write_data,
-    output reg ex_word_op,
     output reg ex_pc_sel         //control harazd!
 
 );

@@ -8,7 +8,6 @@ module ex_mem (
     input [1:0]ex_wb_select,
     input [7:0] ex_write_width,
     input [`width] ex_dmem_write_data,
-    input ex_pc_sel,
     output reg mem_is_write_dmem,
     output reg [1:0]mem_wb_select,
     output reg [7:0] mem_write_width,
