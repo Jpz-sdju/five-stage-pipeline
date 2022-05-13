@@ -38,26 +38,29 @@ module cpu (input sys_clk,
 
     wire word_op;
 
-    idu u_IDU(
-    .sys_clk                   (sys_clk),
-    .now_pc                    (now_pc),
-    .pc_plus_4                 (pc_plus_4),
-    .instruction               (instruction),
-    .final_a                   (final_a),
-    .final_b                   (final_b),
-    .is_write_dmem             (is_write_dmem),
-    .wb_select                 (wb_select),
-    .write_width               (write_width),
-    .write_back_data           (write_back_data),
-    .dmem_write_data           (rs2),
-    .sub                       (sub),
-    .slt_and_spin_off_signed   (slt_and_spin_off_signed),
-    .slt_and_spin_off_unsigned (slt_and_spin_off_unsigned),
-    .alu_op                    (alu_op),
-    .pc_sel                    (pc_sel),
-    .word_op                    (word_op),
-    .ebreak                    (ebreak)
+    idu u_idu(
+    	.sys_clk                   (sys_clk                   ),
+        .instruction               (instruction               ),
+        .now_pc                    (now_pc                    ),
+        .pc_plus_4                 (pc_plus_4                 ),
+        .wb_rd                     (wb_rd                     ),
+        .to_pipeline_rd            (to_pipeline_rd            ),
+        .final_a                   (final_a                   ),
+        .final_b                   (final_b                   ),
+        .is_write_dmem             (is_write_dmem             ),
+        .wb_select                 (wb_select                 ),
+        .write_width               (write_width               ),
+        .write_back_data           (write_back_data           ),
+        .dmem_write_data           (dmem_write_data           ),
+        .sub                       (sub                       ),
+        .slt_and_spin_off_signed   (slt_and_spin_off_signed   ),
+        .slt_and_spin_off_unsigned (slt_and_spin_off_unsigned ),
+        .alu_op                    (alu_op                    ),
+        .pc_sel                    (pc_sel                    ),
+        .word_op                   (word_op                   ),
+        .ebreak                    (ebreak                    )
     );
+    
     
 
     exu u_EXU(
