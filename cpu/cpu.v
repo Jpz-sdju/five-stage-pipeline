@@ -153,17 +153,35 @@ module cpu (input sys_clk,
         .mem_dmem_write_data (mem_dmem_write_data )
     );
     
+    wire [`width] mem_write_back_data;
+    
     mem u_mem(
     .sys_clk         (sys_clk),
     .sys_rst         (sys_rst),
-    .wb_select       (wb_select),
-    .pc_plus_4       (pc_plus_4),
+    .wb_select       (mem_wb_select),
+    .pc_plus_4       (mem_pc_plus_4),
     .alu_res         (alu_res),
     .rs2             (rs2),
     .write_width     (write_width),
     .write_enable    (write_enable),
-    .write_back_data (write_back_data),
+    .write_back_data (mem_write_back_data),
     .vmem_data       (vmem_data)
+    );
+
+    mem_wb u_mem_wb(
+    	.sys_clk             (sys_clk             ),
+        .sys_rst             (sys_rst             ),
+        .valid               (valid               ),
+        .mem_write_back_addr (mem_write_back_addr ),
+        .mem_write_back_data (mem_write_back_data ),
+        .wb_write_back_addr  (wb_write_back_addr  ),
+        .wb_write_back_data  (wb_write_back_data  )
+    );
+    wb u_wb(
+    	.fake_write_back_data (fake_write_back_data ),
+        .fake_write_back_addr (fake_write_back_addr ),
+        .real_write_back_data (real_write_back_data ),
+        .real_write_back_addr (real_write_back_addr )
     );
     
 endmodule
