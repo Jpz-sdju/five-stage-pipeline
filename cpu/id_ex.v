@@ -16,7 +16,7 @@ module id_ex (
     input id_slt_and_spin_off_unsigned,
     input [2:0]id_alu_op,
     input id_word_op,
-    // input id_pc_sel,         //control harazd!
+    input id_pc_sel,         //control harazd!
     ////////////to exu/////////////////
     output reg [`width] ex_final_a,      
     output reg [`width] ex_final_b,      
@@ -30,8 +30,8 @@ module id_ex (
     output reg [1:0] ex_wb_select,
     output reg [7:0] ex_write_width,
     output reg [`width] ex_dmem_write_data,
-    output reg ex_word_op
-    // output reg ex_pc_sel         //control harazd!
+    output reg ex_word_op,
+    output reg ex_pc_sel         //control harazd!
 
 );
     always @(posedge sys_clk) begin
