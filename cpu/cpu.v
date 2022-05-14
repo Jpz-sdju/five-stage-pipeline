@@ -175,45 +175,49 @@ module cpu (input sys_clk,
     wire [7:0] mempr_mem_write_width;
     wire [`width] mempr_mem_rs2_data;
     wire [`width] mempr_mem_alu_res;
-    
+    wire [`width] mempr_wbpr_rd;
+    wire [31:0] mempr_mem_pc_plus_4;
     ex_mem u_ex_mem(
-    .sys_clk                   (sys_clk),
-    .sys_rst                   (sys_rst),
-    .valid                     (valid),
-    .ex_mempr_is_write_dmem    (ex_mempr_is_write_dmem),
-    .ex_mempr_wb_select        (ex_mempr_wb_select),
-    .ex_mempr_write_width      (ex_mempr_write_width),
-    .ex_mempr_rs2_data         (ex_mempr_rs2_data),
-    .ex_mempr_alu_res          (ex_mempr_alu_res),
-    .ex_mempr_pc_plus_4        (ex_mempr_pc_plus_4),
-    .mempr_mem_is_write_dmem   (mempr_mem_is_write_dmem),
-    .mempr_mem_wb_select       (mempr_mem_wb_select),
-    .mempr_mem_write_width     (mempr_mem_write_width),
-    .mempr_mem_rs2_data        (mempr_mem_rs2_data),
-    .mempr_mem_alu_res         (mempr_mem_alu_res),
-    .mempr_mem_pc_plus_4       (mempr_mem_pc_plus_4)
+    	.sys_clk                 (sys_clk                 ),
+        .sys_rst                 (sys_rst                 ),
+        .valid                   (valid                   ),
+        .ex_mempr_is_write_dmem  (ex_mempr_is_write_dmem  ),
+        .ex_mempr_wb_select      (ex_mempr_wb_select      ),
+        .ex_mempr_write_width    (ex_mempr_write_width    ),
+        .ex_mempr_rs2_data       (ex_mempr_rs2_data       ),
+        .expr_mempr_rd           (expr_mempr_rd           ),
+        .ex_mempr_alu_res        (ex_mempr_alu_res        ),
+        .ex_mempr_pc_plus_4      (ex_mempr_pc_plus_4      ),
+        .mempr_mem_is_write_dmem (mempr_mem_is_write_dmem ),
+        .mempr_mem_wb_select     (mempr_mem_wb_select     ),
+        .mempr_mem_write_width   (mempr_mem_write_width   ),
+        .mempr_mem_rs2_data      (mempr_mem_rs2_data      ),
+        .mempr_mem_alu_res       (mempr_mem_alu_res       ),
+        .mempr_wbpr_rd           (mempr_wbpr_rd           ),
+        .mempr_mem_pc_plus_4     (mempr_mem_pc_plus_4     )
     );
     
     
+    wire [`width] mem_wbpr_write_back_data;
     mem u_mem(
     .sys_clk         (sys_clk),
     .sys_rst         (sys_rst),
-    .wb_select       (wb_select),
-    .pc_plus_4       (pc_plus_4),
-    .alu_res         (alu_res),//note: memory access should be taken in exe stage!
-    .rs2_data        (rs2_data),
-    .write_width     (write_width),
-    .write_enable    (write_enable),
-    .write_back_data (write_back_data),
+    .wb_select       (mempr_mem_wb_select),
+    .pc_plus_4       (mempr_mem_pc_plus_4),
+    .alu_res         (mempr_mem_alu_res),//note: memory access should be taken in exe stage!
+    .rs2_data        (mempr_mem_rs2_data),
+    .write_width     (mempr_mem_write_width),
+    .write_enable    (mempr_mem_write_enable),
+    .write_back_data (mem_wbpr_write_back_data),
     .vmem_data       (vmem_data)
     );
-    
-    
+    wire [4:0] wbpr_wb_write_back_addr;
+    wire [`width] wbpr_wb_write_back_data;
     mem_wb u_mem_wb(
     .sys_clk                  (sys_clk),
     .sys_rst                  (sys_rst),
     .valid                    (valid),
-    .mem_wbpr_write_back_addr (mem_wbpr_write_back_addr),
+    .mem_wbpr_write_back_addr (mempr_wbpr_rd),
     .mem_wbpr_write_back_data (mem_wbpr_write_back_data),
     .wbpr_wb_write_back_addr  (wbpr_wb_write_back_addr),
     .wbpr_wb_write_back_data  (wbpr_wb_write_back_data)
