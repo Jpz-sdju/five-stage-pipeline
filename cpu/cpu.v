@@ -71,13 +71,12 @@ module cpu (input sys_clk,
     wire [2:0]id_expr_alu_op;
     wire id_expr_word_op;
     wire id_expr_pc_sel;
-    
     wire [4:0] id_expr_rd;
+    
     idu u_idu(
     .sys_clk                   (sys_clk),
     .instruction               (idpr_id_instruction),
     .now_pc                    (idpr_id_now_pc),
-    .pc_plus_4                 (idpr_id_pc_plus_4),
     .wb_rd                     (wb_rd),
     ////////////////output///////////////
     .to_pipeline_rd            (id_expr_rd),
@@ -112,38 +111,46 @@ module cpu (input sys_clk,
     wire expr_ex_pc_sel;
     
     id_ex u_id_ex(
-    .sys_clk                           (sys_clk),
-    .sys_rst                           (sys_rst),
-    .valid                             (valid),
-    .id_expr_final_a                   (id_expr_final_a),
-    .id_expr_final_b                   (id_expr_final_b),
-    .id_expr_is_write_dmem             (id_expr_is_write_dmem),
-    .id_expr_rd                        (id_expr_rd),
-    .id_expr_wb_select                 (id_expr_wb_select),
-    .id_expr_write_width               (id_expr_write_width),
-    .id_expr_dmem_write_data           (id_expr_dmem_write_data),
-    .id_expr_sub                       (id_expr_sub),
-    .id_expr_slt_and_spin_off_signed   (id_expr_slt_and_spin_off_signed),
-    .id_expr_slt_and_spin_off_unsigned (id_expr_slt_and_spin_off_unsigned),
-    .id_expr_alu_op                    (id_expr_alu_op),
-    .id_expr_word_op                   (id_expr_word_op),
-    .id_expr_pc_sel                    (id_expr_pc_sel),
-    .expr_ex_final_a                   (expr_ex_final_a),
-    .expr_ex_final_b                   (expr_ex_final_b),
-    .expr_ex_alu_op                    (expr_ex_alu_op),
-    .expr_ex_sub                       (expr_ex_sub),
-    .expr_ex_slt_and_spin_off_signed   (expr_ex_slt_and_spin_off_signed),
-    .expr_ex_slt_and_spin_off_unsigned (expr_ex_slt_and_spin_off_unsigned),
-    .expr_ex_word_op                   (expr_ex_word_op),
-    .expr_ex_is_write_dmem             (expr_ex_is_write_dmem),
-    .expr_ex_wb_select                 (expr_ex_wb_select),
-    .expr_ex_write_width               (expr_ex_write_width),
-    .expr_ex_dmem_write_data           (expr_ex_dmem_write_data),
-    .expr_ex_rd                        (expr_ex_rd),
-    .expr_ex_pc_sel                    (expr_ex_pc_sel)
+    	.sys_clk                           (sys_clk                           ),
+        .sys_rst                           (sys_rst                           ),
+        .valid                             (valid                             ),
+        .id_expr_final_a                   (id_expr_final_a                   ),
+        .id_expr_final_b                   (id_expr_final_b                   ),
+        .id_expr_pc_plus_4                 (id_expr_pc_plus_4                 ),
+        .id_expr_is_write_dmem             (id_expr_is_write_dmem             ),
+        .id_expr_rd                        (id_expr_rd                        ),
+        .id_expr_wb_select                 (id_expr_wb_select                 ),
+        .id_expr_write_width               (id_expr_write_width               ),
+        .id_expr_dmem_write_data           (id_expr_dmem_write_data           ),
+        .id_expr_sub                       (id_expr_sub                       ),
+        .id_expr_slt_and_spin_off_signed   (id_expr_slt_and_spin_off_signed   ),
+        .id_expr_slt_and_spin_off_unsigned (id_expr_slt_and_spin_off_unsigned ),
+        .id_expr_alu_op                    (id_expr_alu_op                    ),
+        .id_expr_word_op                   (id_expr_word_op                   ),
+        .id_expr_pc_sel                    (id_expr_pc_sel                    ),
+        .expr_ex_final_a                   (expr_ex_final_a                   ),
+        .expr_ex_final_b                   (expr_ex_final_b                   ),
+        .expr_ex_pc_plus_4                 (expr_ex_pc_plus_4                 ),
+        .expr_ex_alu_op                    (expr_ex_alu_op                    ),
+        .expr_ex_sub                       (expr_ex_sub                       ),
+        .expr_ex_slt_and_spin_off_signed   (expr_ex_slt_and_spin_off_signed   ),
+        .expr_ex_slt_and_spin_off_unsigned (expr_ex_slt_and_spin_off_unsigned ),
+        .expr_ex_word_op                   (expr_ex_word_op                   ),
+        .expr_ex_is_write_dmem             (expr_ex_is_write_dmem             ),
+        .expr_ex_wb_select                 (expr_ex_wb_select                 ),
+        .expr_ex_write_width               (expr_ex_write_width               ),
+        .expr_ex_dmem_write_data           (expr_ex_dmem_write_data           ),
+        .expr_ex_rd                        (expr_ex_rd                        ),
+        .expr_ex_pc_sel                    (expr_ex_pc_sel                    )
     );
     
+    
     wire [`width] ex_mempr_alu_res;
+    wire ex_mempr_is_write_dmem=expr_ex_is_write_dmem;
+    wire [1:0]ex_mempr_wb_select=expr_ex_wb_select;
+    wire [7:0] ex_mempr_write_width=expr_ex_write_width;
+    wire [`width] ex_mempr_dmem_write_data=expr_ex_dmem_write_data;
+
     exu u_EXU(
     .a                         (expr_ex_final_a),
     .b                         (expr_ex_final_b),
@@ -159,29 +166,33 @@ module cpu (input sys_clk,
     wire [1:0]mempr_mem_wb_select;
     wire [7:0] mempr_mem_write_width;
     wire [`width] mempr_mem_dmem_write_data;
-    ex_mem u_ex_mem(
-    .sys_clk                   (sys_clk),
-    .sys_rst                   (sys_rst),
-    .valid                     (valid),
-    .ex_mempr_is_write_dmem    (ex_mempr_is_write_dmem),
-    .ex_mempr_wb_select        (ex_mempr_wb_select),
-    .ex_mempr_write_width      (ex_mempr_write_width),
-    .ex_mempr_dmem_write_data  (ex_mempr_dmem_write_data),
-    .mempr_mem_is_write_dmem   (mempr_mem_is_write_dmem),
-    .mempr_mem_wb_select       (mempr_mem_wb_select),
-    .mempr_mem_write_width     (mempr_mem_write_width),
-    .mempr_mem_dmem_write_data (mempr_mem_dmem_write_data)
-    );
+    wire [`width] mempr_mem_alu_res;
+
+ex_mem u_ex_mem(
+    .sys_clk                   (sys_clk                   ),
+    .sys_rst                   (sys_rst                   ),
+    .valid                     (valid                     ),
+    .ex_mempr_is_write_dmem    (ex_mempr_is_write_dmem    ),
+    .ex_mempr_wb_select        (ex_mempr_wb_select        ),
+    .ex_mempr_write_width      (ex_mempr_write_width      ),
+    .ex_mempr_dmem_write_data  (ex_mempr_dmem_write_data  ),
+    .ex_mempr_alu_res          (ex_mempr_alu_res          ),
+    .mempr_mem_is_write_dmem   (mempr_mem_is_write_dmem   ),
+    .mempr_mem_wb_select       (mempr_mem_wb_select       ),
+    .mempr_mem_write_width     (mempr_mem_write_width     ),
+    .mempr_mem_dmem_write_data (mempr_mem_dmem_write_data ),
+    .mempr_mem_alu_res         (mempr_mem_alu_res         )
+);
+
     
     
-    wire [`width] mem_write_back_data;
     
     mem u_mem(
     .sys_clk         (sys_clk),
     .sys_rst         (sys_rst),
     .wb_select       (mempr_mem_wb_select),
     .pc_plus_4       (mempr_mem_pc_plus_4),
-    .alu_res         (ex_mempr_alu_res),
+    .alu_res         (mempr_mem_alu_res),
     .rs2             (rs2),
     .write_width     (write_width),
     .write_enable    (write_enable),

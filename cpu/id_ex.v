@@ -5,7 +5,8 @@ module id_ex (
     input valid,
     
     input [`width] id_expr_final_a,      
-    input [`width] id_expr_final_b,      
+    input [`width] id_expr_final_b,
+    input [31:0] id_expr_pc_plus_4,
     //signals to MEM_EB
     input id_expr_is_write_dmem,
     input [4:0] id_expr_rd,
@@ -21,6 +22,7 @@ module id_ex (
     ////////////to exu/////////////////
     output reg [`width] expr_ex_final_a,      
     output reg [`width] expr_ex_final_b,      
+    output reg [31:0] expr_ex_pc_plus_4,
     output reg [2:0]expr_ex_alu_op,
     output reg expr_ex_sub,
     output reg expr_ex_slt_and_spin_off_signed,
@@ -39,6 +41,7 @@ module id_ex (
     always @(posedge sys_clk) begin
         expr_ex_final_a<= id_expr_final_a;     
         expr_ex_final_b<= id_expr_final_b;
+        expr_ex_pc_plus_4<=id_expr_pc_plus_4;
         expr_ex_is_write_dmem<=id_expr_is_write_dmem;
         expr_ex_wb_select<=id_expr_wb_select;
         expr_ex_write_width<=id_expr_write_width;
