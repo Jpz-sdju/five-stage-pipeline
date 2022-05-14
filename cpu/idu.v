@@ -3,8 +3,6 @@ module idu (
     input sys_clk,
     input [31:0] instruction,
     input [`width] now_pc,        //signal to mux that across regfile and alu's b port
-
-    input [`width] pc_plus_4,
     input [4:0] wb_rd,
     output [4:0] to_pipeline_rd,
     output [`width] final_a,      //oprend a to alu
