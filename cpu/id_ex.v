@@ -8,6 +8,7 @@ module id_ex (
     input [`width] id_expr_final_b,      
     //signals to MEM_EB
     input id_expr_is_write_dmem,
+    input [4:0] id_expr_rd,
     input [1:0] id_expr_wb_select,
     input [7:0] id_expr_write_width,
     input [`width] id_expr_dmem_write_data,
@@ -31,6 +32,7 @@ module id_ex (
     output reg [1:0] expr_ex_wb_select,
     output reg [7:0] expr_ex_write_width,
     output reg [`width] expr_ex_dmem_write_data,
+    output reg [4:0] expr_ex_rd,
     output reg expr_ex_pc_sel         //control harazd!
 
 );
@@ -47,5 +49,6 @@ module id_ex (
         expr_ex_alu_op<=id_expr_alu_op;
         expr_ex_word_op<=id_expr_word_op;
         expr_ex_pc_sel<=id_expr_pc_sel;
+        expr_ex_rd<=id_expr_rd;
     end
 endmodule

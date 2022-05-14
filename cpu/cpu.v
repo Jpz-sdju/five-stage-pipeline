@@ -32,15 +32,15 @@ module cpu (input sys_clk,
     wire [`width] idpr_id_pc_plus_4;
     wire [`width] idpr_id_instruction;
     if_id u_if_id(
-    .sys_clk        (sys_clk),
-    .sys_rst        (sys_rst),
-    .valid          (valid),
-    .if_now_pc      (if_idpr_now_pc),
-    .if_pc_plus_4   (if_idpr_pc_plus_4),
-    .if_instruction (if_idpr_instruction),
-    .id_now_pc      (idpr_id_now_pc),
-    .id_pc_plus_4   (idpr_id_pc_plus_4),
-    .id_instruction (idpr_id_instruction)
+    	.sys_clk             (sys_clk             ),
+        .sys_rst             (sys_rst             ),
+        .valid               (valid               ),
+        .if_idpr_now_pc      (if_idpr_now_pc      ),
+        .if_idpr_pc_plus_4   (if_idpr_pc_plus_4   ),
+        .if_idpr_instruction (if_idpr_instruction ),
+        .idpr_id_now_pc      (idpr_id_now_pc      ),
+        .idpr_id_pc_plus_4   (idpr_id_pc_plus_4   ),
+        .idpr_id_instruction (idpr_id_instruction )
     );
     
     
@@ -57,41 +57,46 @@ module cpu (input sys_clk,
     wire [3:0] alu_op;
     wire [`width] rs2;
     
-    wire word_op;
     
+    wire [`width] id_expr_final_a;      
+    wire [`width] id_expr_final_b;      
+    //signals to MEM_EB
+    wire id_expr_is_write_dmem;
+    wire [1:0] id_expr_wb_select;
+    wire [7:0] id_expr_write_width;
+    wire [`width] id_expr_dmem_write_data;
+    wire id_expr_sub;
+    wire id_expr_slt_and_spin_off_signed;
+    wire id_expr_slt_and_spin_off_unsigned;
+    wire [2:0]id_expr_alu_op;
+    wire id_expr_word_op;
+    wire id_expr_pc_sel; 
+
+    wire [4:0] id_expr_rd;
     idu u_idu(
     .sys_clk                   (sys_clk),
-    .instruction               (id_instruction),
-    .now_pc                    (id_now_pc),
-    .pc_plus_4                 (id_pc_plus_4),
+    .instruction               (idpr_id_instruction),
+    .now_pc                    (idpr_id_now_pc),
+    .pc_plus_4                 (idpr_id_pc_plus_4),
     .wb_rd                     (wb_rd),
-    .to_pipeline_rd            (to_pipeline_rd),
-    .final_a                   (final_a),
-    .final_b                   (final_b),
-    .is_write_dmem             (is_write_dmem),
-    .wb_select                 (wb_select),
-    .write_width               (write_width),
-    .write_back_data           (write_back_data),
-    .dmem_write_data           (dmem_write_data),
-    .sub                       (sub),
-    .slt_and_spin_off_signed   (slt_and_spin_off_signed),
-    .slt_and_spin_off_unsigned (slt_and_spin_off_unsigned),
-    .alu_op                    (alu_op),
-    .pc_sel                    (pc_sel),
-    .word_op                   (word_op),
+    ////////////////output///////////////
+    .to_pipeline_rd            (id_expr_rd),
+    .final_a                   (id_expr_final_a),
+    .final_b                   (id_expr_final_b),
+    .is_write_dmem             (id_expr_is_write_dmem),
+    .wb_select                 (id_expr_wb_select),
+    .write_width               (id_expr_write_width),
+    .write_back_data           (id_expr_write_back_data),
+    .dmem_write_data           (id_expr_dmem_write_data),
+    .sub                       (id_expr_sub),
+    .slt_and_spin_off_signed   (id_expr_slt_and_spin_off_signed),
+    .slt_and_spin_off_unsigned (id_expr_slt_and_spin_off_unsigned),
+    .alu_op                    (id_expr_alu_op),
+    .pc_sel                    (id_expr_pc_sel),
+    .word_op                   (id_expr_word_op),
     .ebreak                    (ebreak)
     );
     
-    // wire [`width] id_final_a          = final_a;
-    // wire [`width] id_final_b          = final_b;
-    // wire [2:0]id_alu_op               = alu_op;
-    // wire id_sub                       = sub;
-    // wire id_slt_and_spin_off_signed   = slt_and_spin_off_signed;
-    // wire id_slt_and_spin_off_unsigned = slt_and_spin_off_unsigned;
-    // wire id_is_write_dmem             = is_write_dmem;
-    // wire [1:0] id_wb_select           = wb_select;
-    // wire [7:0] id_write_width         = write_width;
-    // wire [`width] id_dmem_write_data  = dmem_write_data;
     
     wire [`width] ex_final_a;
     wire [`width] ex_final_b;
