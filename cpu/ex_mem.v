@@ -4,19 +4,19 @@ module ex_mem (
     input sys_rst,
     input valid,
 
-    input ex_is_write_dmem,
-    input [1:0]ex_wb_select,
-    input [7:0] ex_write_width,
-    input [`width] ex_dmem_write_data,
-    output reg mem_is_write_dmem,
-    output reg [1:0]mem_wb_select,
-    output reg [7:0] mem_write_width,
-    output reg [`width] mem_dmem_write_data
+    input ex_mempr_is_write_dmem,
+    input [1:0]ex_mempr_wb_select,
+    input [7:0] ex_mempr_write_width,
+    input [`width] ex_mempr_dmem_write_data,
+    output reg mempr_mem_is_write_dmem,
+    output reg [1:0]mempr_mem_wb_select,
+    output reg [7:0] mempr_mem_write_width,
+    output reg [`width] mempr_mem_dmem_write_data
 );
     always @(posedge sys_clk) begin
-         mem_is_write_dmem<=ex_is_write_dmem;
-         mem_wb_select<=ex_wb_select;
-         mem_write_width<=ex_write_width;
-         mem_dmem_write_data<=ex_dmem_write_data;
+         mempr_mem_is_write_dmem<=ex_mempr_is_write_dmem;
+         mempr_mem_wb_select<=ex_mempr_wb_select;
+         mempr_mem_write_width<=ex_mempr_write_width;
+         mempr_mem_dmem_write_data<=ex_mempr_dmem_write_data;
     end
 endmodule

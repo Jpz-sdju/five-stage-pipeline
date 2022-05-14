@@ -24,23 +24,23 @@ module cpu (input sys_clk,
     .instruction(instruction)
     );
     
-    wire [`width] if_now_pc      = now_pc;
-    wire [`width] if_pc_plus_4   = pc_plus_4;
-    wire [`width] if_instruction = instruction;
+    wire [`width] if_idpr_now_pc      = now_pc;
+    wire [`width] if_idpr_pc_plus_4   = pc_plus_4;
+    wire [`width] if_idpr_instruction = instruction;
     
-    wire [`width] id_now_pc;
-    wire [`width] id_pc_plus_4;
-    wire [`width] id_instruction;
+    wire [`width] idpr_id_now_pc;
+    wire [`width] idpr_id_pc_plus_4;
+    wire [`width] idpr_id_instruction;
     if_id u_if_id(
     .sys_clk        (sys_clk),
     .sys_rst        (sys_rst),
     .valid          (valid),
-    .if_now_pc      (if_now_pc),
-    .if_pc_plus_4   (if_pc_plus_4),
-    .if_instruction (if_instruction),
-    .id_now_pc      (id_now_pc),
-    .id_pc_plus_4   (id_pc_plus_4),
-    .id_instruction (id_instruction)
+    .if_now_pc      (if_idpr_now_pc),
+    .if_pc_plus_4   (if_idpr_pc_plus_4),
+    .if_instruction (if_idpr_instruction),
+    .id_now_pc      (idpr_id_now_pc),
+    .id_pc_plus_4   (idpr_id_pc_plus_4),
+    .id_instruction (idpr_id_instruction)
     );
     
     

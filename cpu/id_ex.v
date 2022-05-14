@@ -4,48 +4,48 @@ module id_ex (
     input sys_rst,
     input valid,
     
-    input [`width] id_final_a,      
-    input [`width] id_final_b,      
+    input [`width] id_expr_final_a,      
+    input [`width] id_expr_final_b,      
     //signals to MEM_EB
-    input id_is_write_dmem,
-    input [1:0] id_wb_select,
-    input [7:0] id_write_width,
-    input [`width] id_dmem_write_data,
-    input id_sub,
-    input id_slt_and_spin_off_signed,
-    input id_slt_and_spin_off_unsigned,
-    input [2:0]id_alu_op,
-    input id_word_op,
-    input id_pc_sel,         //control harazd!
+    input id_expr_is_write_dmem,
+    input [1:0] id_expr_wb_select,
+    input [7:0] id_expr_write_width,
+    input [`width] id_expr_dmem_write_data,
+    input id_expr_sub,
+    input id_expr_slt_and_spin_off_signed,
+    input id_expr_slt_and_spin_off_unsigned,
+    input [2:0]id_expr_alu_op,
+    input id_expr_word_op,
+    input id_expr_pc_sel,         //control harazd!
     ////////////to exu/////////////////
-    output reg [`width] ex_final_a,      
-    output reg [`width] ex_final_b,      
-    output reg [2:0]ex_alu_op,
-    output reg ex_sub,
-    output reg ex_slt_and_spin_off_signed,
-    output reg ex_slt_and_spin_off_unsigned,
-    output reg ex_word_op,
+    output reg [`width] expr_ex_final_a,      
+    output reg [`width] expr_ex_final_b,      
+    output reg [2:0]expr_ex_alu_op,
+    output reg expr_ex_sub,
+    output reg expr_ex_slt_and_spin_off_signed,
+    output reg expr_ex_slt_and_spin_off_unsigned,
+    output reg expr_ex_word_op,
     ///////////end od to exu//////////////
     //signareg ls to MEM_EB
-    output reg ex_is_write_dmem,
-    output reg [1:0] ex_wb_select,
-    output reg [7:0] ex_write_width,
-    output reg [`width] ex_dmem_write_data,
-    output reg ex_pc_sel         //control harazd!
+    output reg expr_ex_is_write_dmem,
+    output reg [1:0] expr_ex_wb_select,
+    output reg [7:0] expr_ex_write_width,
+    output reg [`width] expr_ex_dmem_write_data,
+    output reg expr_ex_pc_sel         //control harazd!
 
 );
     always @(posedge sys_clk) begin
-        ex_final_a<= id_final_a;     
-        ex_final_b<= id_final_b;
-        ex_is_write_dmem<=id_is_write_dmem;
-        ex_wb_select<=id_wb_select;
-        ex_write_width<=id_write_width;
-        ex_dmem_write_data<=id_dmem_write_data;
-        ex_sub<=id_sub;
-        ex_slt_and_spin_off_signed<=id_slt_and_spin_off_signed;
-        ex_slt_and_spin_off_unsigned<=id_slt_and_spin_off_unsigned;
-        ex_alu_op<=id_alu_op;
-        ex_word_op<=id_word_op;
-        // ex_pc_sel<=id_pc_sel;
+        expr_ex_final_a<= id_expr_final_a;     
+        expr_ex_final_b<= id_expr_final_b;
+        expr_ex_is_write_dmem<=id_expr_is_write_dmem;
+        expr_ex_wb_select<=id_expr_wb_select;
+        expr_ex_write_width<=id_expr_write_width;
+        expr_ex_dmem_write_data<=id_expr_dmem_write_data;
+        expr_ex_sub<=id_expr_sub;
+        expr_ex_slt_and_spin_off_signed<=id_expr_slt_and_spin_off_signed;
+        expr_ex_slt_and_spin_off_unsigned<=id_expr_slt_and_spin_off_unsigned;
+        expr_ex_alu_op<=id_expr_alu_op;
+        expr_ex_word_op<=id_expr_word_op;
+        expr_ex_pc_sel<=id_expr_pc_sel;
     end
 endmodule
