@@ -12,7 +12,7 @@ module id_ex (
     input [4:0] id_expr_rd,
     input [1:0] id_expr_wb_select,
     input [7:0] id_expr_write_width,
-    input [`width] id_expr_dmem_write_data,
+    input [`width] id_expr_rs2_data,
     input id_expr_sub,
     input id_expr_slt_and_spin_off_signed,
     input id_expr_slt_and_spin_off_unsigned,
@@ -33,7 +33,7 @@ module id_ex (
     output reg expr_ex_is_write_dmem,
     output reg [1:0] expr_ex_wb_select,
     output reg [7:0] expr_ex_write_width,
-    output reg [`width] expr_ex_dmem_write_data,
+    output reg [`width] expr_ex_rs2_data,
     output reg [4:0] expr_ex_rd,
     output reg expr_ex_pc_sel         //control harazd!
 
@@ -45,7 +45,7 @@ module id_ex (
         expr_ex_is_write_dmem<=id_expr_is_write_dmem;
         expr_ex_wb_select<=id_expr_wb_select;
         expr_ex_write_width<=id_expr_write_width;
-        expr_ex_dmem_write_data<=id_expr_dmem_write_data;
+        expr_ex_rs2_data<=id_expr_rs2_data;
         expr_ex_sub<=id_expr_sub;
         expr_ex_slt_and_spin_off_signed<=id_expr_slt_and_spin_off_signed;
         expr_ex_slt_and_spin_off_unsigned<=id_expr_slt_and_spin_off_unsigned;

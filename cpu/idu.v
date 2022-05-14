@@ -4,6 +4,7 @@ module idu (
     input [31:0] instruction,
     input [`width] now_pc,        //signal to mux that across regfile and alu's b port
     input [4:0] wb_rd,
+    input [`width] write_back_data,
     output [4:0] to_pipeline_rd,
     output [`width] final_a,      //oprend a to alu
     output [`width] final_b,      //oprend b to alu
@@ -11,9 +12,8 @@ module idu (
     output is_write_dmem,
     output reg [1:0] wb_select,
     output reg [7:0] write_width,
-    output [`width] write_back_data,
 
-    output [`width] dmem_write_data,
+    output [`width] rs2_data,
     output sub,
     output slt_and_spin_off_signed,
     output slt_and_spin_off_unsigned,
@@ -47,7 +47,7 @@ module idu (
     wire [`width] register_data2;
     wire [`width] extended_imm;
 
-    assign dmem_write_data = register_data2;
+    assign rs2_data = register_data2;
     //ebreak signal
     assign ebreak = ( opcode[6]& opcode[5]& opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0]);
 
