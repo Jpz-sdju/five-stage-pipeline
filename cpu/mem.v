@@ -5,7 +5,7 @@ module mem (
     input [1:0] wb_select,
                input [`width] pc_plus_4,
                input [`width] alu_res,
-               input [`width] rs2,
+               input [`width] dmem_write_data,
                input [7:0] write_width,
                input write_enable,
                output [`width] write_back_data,
@@ -31,16 +31,16 @@ module mem (
     always @(posedge sys_clk) begin
         if (write_enable ) begin
             case (write_width)
-                8'b1:dmem[alu_res] = rs2[7:0];
+                8'b1:dmem[alu_res] = dmem_write_data[7:0];
                 8'b11:begin
-                    dmem[alu_res] = rs2[7:0];
-                    dmem[alu_res+1] = rs2[15:8];
+                    dmem[alu_res] = dmem_write_data[7:0];
+                    dmem[alu_res+1] = dmem_write_data[15:8];
                 end
                 8'b1111:begin
-                    dmem[alu_res] = rs2[7:0];
-                    dmem[alu_res+1] = rs2[15:8];
-                    dmem[alu_res+2] = rs2[24:16];
-                    dmem[alu_res+3] = rs2[31:25];
+                    dmem[alu_res] = dmem_write_data[7:0];
+                    dmem[alu_res+1] = dmem_write_data[15:8];
+                    dmem[alu_res+2] = dmem_write_data[24:16];
+                    dmem[alu_res+3] = dmem_write_data[31:25];
                 end 
             endcase
         end
