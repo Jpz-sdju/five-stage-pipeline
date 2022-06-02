@@ -1,5 +1,5 @@
 `include "para.v"
-module ysyx_22040383_hazard_control (
+module hazard_control (
     input valid,
     input id_is_store,
     input has_rs1,
@@ -14,11 +14,11 @@ module ysyx_22040383_hazard_control (
     input ex_is_flushed,
     input mem_is_flushed,
     input wb_is_flushed,
-    input [`ysyx_22040383_reg_width] id_rs1,
-    input [`ysyx_22040383_reg_width] id_rs2,
-    input [`ysyx_22040383_reg_width] exe_rd,
-    input [`ysyx_22040383_reg_width] mem_rd,
-    input [`ysyx_22040383_reg_width] wb_rd,
+    input [`reg_width] id_rs1,
+    input [`reg_width] id_rs2,
+    input [`reg_width] exe_rd,
+    input [`reg_width] mem_rd,
+    input [`reg_width] wb_rd,
     output reg [1:0] forwarding_a_option,
     output reg [1:0] forwarding_b_option,
     //////flush

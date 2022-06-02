@@ -1,7 +1,7 @@
 `include "para.v"
-module ysyx_22040383_compare (
-    input [`ysyx_22040383_width] a,
-    input [`ysyx_22040383_width] b,
+module compare (
+    input [`width] a,
+    input [`width] b,
     output equal,
     output less_than,
     output u_less_than

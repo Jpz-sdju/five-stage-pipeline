@@ -1,4 +1,4 @@
-module ysyx_22040383_regfile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
+module regfile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
   input sys_clk,
   input [ADDR_WIDTH-1:0] raddr1,
   input [ADDR_WIDTH-1:0] raddr2,
@@ -10,8 +10,7 @@ module ysyx_22040383_regfile #(ADDR_WIDTH = 1, DATA_WIDTH = 1) (
   output [DATA_WIDTH-1:0] rdata2,
   input wen
 );
-import "DPI-C" function void set_gpr_ptr(input logic [63:0] a []);
-initial set_gpr_ptr(rf);  // rf为通用寄存器的二维数组变量
+
 
   reg [DATA_WIDTH-1:0] rf [ADDR_WIDTH-1:0];
 

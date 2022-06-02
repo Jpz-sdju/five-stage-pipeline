@@ -1,21 +1,21 @@
 `include "para.v"
-module ysyx_22040383_id_ex (
+module id_ex (
     input sys_clk,
     input sys_rst,
     input invalid,
     
-    input [`ysyx_22040383_width] id_expr_final_a,      
-    input [`ysyx_22040383_width] id_expr_final_b,
-    input [`ysyx_22040383_width] id_expr_pc_plus_4,
-    input [`ysyx_22040383_width] idpr_expr_now_pc,
-    input [`ysyx_22040383_instr_width] idpr_expr_instruction,
+    input [`width] id_expr_final_a,      
+    input [`width] id_expr_final_b,
+    input [`width] id_expr_pc_plus_4,
+    input [`width] idpr_expr_now_pc,
+    input [`instr_width] idpr_expr_instruction,
     //signals to MEM_EB
     input id_expr_is_write_dmem,
     input id_expr_is_write_rf,
     input [4:0] id_expr_rd,
     input [1:0] id_expr_wb_select,
     input [7:0] id_expr_write_width,
-    input [`ysyx_22040383_width] id_expr_rs2_data,
+    input [`width] id_expr_rs2_data,
     input id_expr_sub,
     input id_expr_slt_and_spin_off_signed,
     input id_expr_slt_and_spin_off_unsigned,
@@ -23,10 +23,10 @@ module ysyx_22040383_id_ex (
     input id_expr_word_op,
     input id_expr_stall,         //control harazd!
     ////////////to exu/////////////////
-    output reg [`ysyx_22040383_width] expr_ex_final_a,      
-    output reg [`ysyx_22040383_width] expr_ex_final_b,      
-    output reg [`ysyx_22040383_width] expr_ex_pc_plus_4,
-    output reg [`ysyx_22040383_instr_width] expr_mempr_instruction,
+    output reg [`width] expr_ex_final_a,      
+    output reg [`width] expr_ex_final_b,      
+    output reg [`width] expr_ex_pc_plus_4,
+    output reg [`instr_width] expr_mempr_instruction,
     output reg [3:0]expr_ex_alu_op,
     output reg expr_ex_sub,
     output reg expr_ex_slt_and_spin_off_signed,
@@ -38,10 +38,10 @@ module ysyx_22040383_id_ex (
     output reg expr_mempr_is_write_rf,
     output reg [1:0] expr_ex_wb_select,
     output reg [7:0] expr_ex_write_width,
-    output reg [`ysyx_22040383_width] expr_ex_rs2_data,
+    output reg [`width] expr_ex_rs2_data,
     output reg [4:0] expr_mempr_rd,
     output reg expr_mempr_stall,         //control harazd!
-    output reg [`ysyx_22040383_width] expr_mempr_now_pc
+    output reg [`width] expr_mempr_now_pc
 
 );
     always @(posedge sys_clk) begin

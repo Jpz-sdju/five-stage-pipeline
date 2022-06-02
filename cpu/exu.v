@@ -1,31 +1,33 @@
 `include "para.v"
-module ysyx_22040383_exu (
-    input [`ysyx_22040383_width] a,
-    input [`ysyx_22040383_width] b,
+module exu (
+    input [`width] a,
+    input [`width] b,
     input [3:0] alu_op,
     input sub,
     input slt_and_spin_off_signed,
     input slt_and_spin_off_unsigned,
     input word_op,
-    output [`ysyx_22040383_width] res
+    output [`width] res
 );
-    wire [`ysyx_22040383_width] tricked_b;
-    wire [`ysyx_22040383_width] alu_res;
-    wire [`ysyx_22040383_width] pre_alu_res;
+    wire [`width] tricked_b;
+    wire [`width] alu_res;
+    wire [`width] pre_alu_res;
     wire cout;
 
-    // wire [`ysyx_22040383_width] word_judged_a = word_op?
+    wire contrary_signed =a[63] ^ b[63];
+    wire slt_contrary_signed = contrary_signed&&slt_and_spin_off_signed;
+    // wire [`width] word_judged_a = word_op?
     // a[63]?{{32{1'b1}},a[31:0]}:{{32{1'b0}},a[31:0]}:a;
-    // wire [`ysyx_22040383_width] word_judged_b = word_op?
+    // wire [`width] word_judged_b = word_op?
     // b[63]?{{32{1'b1}},b[31:0]}:{{32{1'b0}},b[31:0]}:b;
 
-    wire [`ysyx_22040383_width] word_judged_a = word_op?
+    wire [`width] word_judged_a = word_op?
     {{32{1'b0}},a[31:0]}:a;
-    wire [`ysyx_22040383_width] word_judged_b = word_op?
+    wire [`width] word_judged_b = word_op?
     {{32{1'b0}},b[31:0]}:b;
 
-    wire [`ysyx_22040383_width] word_extended_result = {{32{pre_alu_res[31]}},pre_alu_res[31:0]};
-    wire [`ysyx_22040383_width]one_bit_res;
+    wire [`width] word_extended_result = {{32{pre_alu_res[31]}},pre_alu_res[31:0]};
+    wire [`width]one_bit_res;
     MuxKey #(2,1,64) word_extended_mux(
         alu_res,
         word_op,
@@ -34,7 +36,7 @@ module ysyx_22040383_exu (
             1'b1,word_extended_result
         }
     );
-    ysyx_22040383_alu u_alu(
+    alu u_alu(
         word_judged_a,
         tricked_b,
         alu_op,
@@ -69,8 +71,7 @@ module ysyx_22040383_exu (
     );
 
 
-    wire contrary_signed =a[63] ^ b[63];
-    wire slt_contrary_signed = contrary_signed&&slt_and_spin_off_signed;
+    
 
 
 
