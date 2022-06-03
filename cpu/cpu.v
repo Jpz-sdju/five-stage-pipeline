@@ -1,13 +1,14 @@
 `include "para.v"
 module cpu (input sys_clk,
-            input sys_rst,
-            output [`width]now_pc,
-            output stall,
-            output ebreak);
+            input sys_rst
+            // output [`width]now_pc,
+            // output stall,
+            // output ebreak
+            );
     ////////difftest signals//////////////
     
     wire wbpr_wb_stall;
-    assign stall = wbpr_wb_stall;
+    // assign stall = wbpr_wb_stall;
     
     
     ///////end of difftest signals//////////
@@ -389,9 +390,9 @@ module cpu (input sys_clk,
     .pc_plus_4       (mempr_mem_pc_plus_4),
     .read_addr       (ex_mempr_alu_res),//note: memory access should be taken in exe stage!
     .alu_res         (mempr_mem_alu_res),
-    .rs2_data        (mempr_mem_rs2_data),
-    .write_width     (mempr_mem_write_width),
-    .write_enable    (mempr_mem_is_write_dmem),
+    .rs2_data        (ex_mempr_rs2_data),   //note
+    .write_width     (expr_mempr_write_width),  //note
+    .write_enable    (expr_mempr_is_write_dmem),    //note
     .unprocess_data  (mem_unprocess_data)
     );
     write_back_extender u_mem_extender(

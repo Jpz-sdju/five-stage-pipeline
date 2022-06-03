@@ -30,7 +30,12 @@ module ifu (
             pc_plus_4 = now_pc;
     end
 
-
+imem_rom imem (
+  .clka(sys_clk),    // input wire clka
+  .ena(1'b1),      // input wire ena
+  .addra(next_pc),  // input wire [10 : 0] addra
+  .douta(instruction)  // output wire [31 : 0] douta
+);
 
 
 
