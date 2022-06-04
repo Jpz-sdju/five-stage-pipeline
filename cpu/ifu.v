@@ -7,7 +7,7 @@ module ifu (
     input pc_sel,
     output [`width] now_pc,
     output reg [`width] pc_plus_4,
-    output reg [31:0] instruction
+    output [31:0] instruction
     // output [`width] next_pc           //this signal is set for difftest
 );
     wire [`width] next_pc;
@@ -33,7 +33,7 @@ module ifu (
 imem_rom imem (
   .clka(sys_clk),    // input wire clka
   .ena(1'b1),      // input wire ena
-  .addra(next_pc),  // input wire [10 : 0] addra
+  .addra(next_pc[12:2]),  // input wire [10 : 0] addra
   .douta(instruction)  // output wire [31 : 0] douta
 );
 

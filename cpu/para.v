@@ -7,7 +7,7 @@
 `define iw_type_opcode 7'b0011011
 `define l_type_opcode 7'b0000011
 `define b_type_opcode 7'b1100011
-`define s_type_opcode 7'b0010011
+`define s_type_opcode 7'b0100011
 `define auipc_opcode 7'b0010111
 `define lui_opcode 7'b0110111
 `define jal_type_opcode 7'b1101111

@@ -131,10 +131,10 @@ module font_display(input lcd_clk,                    //时钟
     //     else colorbar_data <= BACK_COLOR;
     // end
     
-    block_rom u_brom (
+    wtf_vmem_rom u_brom (
     .clka(lcd_clk),    // input wire clka
     .addra(addra),  // input wire [11 : 0] addra
-    .douta(dout)  // output wire [31 : 0] douta
+    .douta(dout)
     );
-    
+
 endmodule

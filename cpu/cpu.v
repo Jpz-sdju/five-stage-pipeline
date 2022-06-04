@@ -1,6 +1,7 @@
 `include "para.v"
 module cpu (input sys_clk,
-            input sys_rst
+            input sys_rst,
+            output [63:0]vmem_reg
             // output [`width]now_pc,
             // output stall,
             // output ebreak
@@ -143,6 +144,7 @@ module cpu (input sys_clk,
     wire real_is_write_rf;
     regfile #(32,64)u_regfile(
     sys_clk,
+    sys_rst,
     rs1,
     rs2,
     wb_addr,
@@ -386,6 +388,9 @@ module cpu (input sys_clk,
     mem u_mem(
     .sys_clk         (sys_clk),
     .sys_rst         (sys_rst),
+    .op_sb           (expr_mempr_instruction[6:0] == `s_type_opcode && expr_mempr_instruction[14:12] == 3'b000),
+    .op_sh           (expr_mempr_instruction[6:0] == `s_type_opcode && expr_mempr_instruction[14:12] == 3'b001),
+    .op_sw           (expr_mempr_instruction[6:0] == `s_type_opcode && expr_mempr_instruction[14:12] == 3'b010),
     .wb_select       (mempr_mem_wb_select),
     .pc_plus_4       (mempr_mem_pc_plus_4),
     .read_addr       (ex_mempr_alu_res),//note: memory access should be taken in exe stage!
@@ -393,7 +398,8 @@ module cpu (input sys_clk,
     .rs2_data        (ex_mempr_rs2_data),   //note
     .write_width     (expr_mempr_write_width),  //note
     .write_enable    (expr_mempr_is_write_dmem),    //note
-    .unprocess_data  (mem_unprocess_data)
+    .unprocess_data  (mem_unprocess_data),
+    .vmem_reg        (vmem_reg)
     );
     write_back_extender u_mem_extender(
     .instruction    (mempr_wbpr_instruction),
@@ -408,7 +414,6 @@ module cpu (input sys_clk,
     wire wbpr_wb_is_write_rf;
     mem_wb u_mem_wb(
     .sys_clk                  (sys_clk),
-    .sys_rst                  (sys_rst),
     .valid                    (valid),
     .mem_wbpr_write_back_data (mem_wbpr_write_back_data),
     .mem_wbpr_write_back_addr (mempr_wbpr_rd),

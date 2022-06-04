@@ -1,4 +1,5 @@
 `include "para.v"
+(* DONT_TOUCH = "1" *)
 module write_back_extender (
     input [`instr_width] instruction,
     input [`width] unprocess_data,

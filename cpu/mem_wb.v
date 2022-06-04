@@ -1,7 +1,6 @@
 `include "para.v"
 module mem_wb (
     input sys_clk,
-    input sys_rst,
     input valid,
     
     input [`width] mem_wbpr_write_back_data,
